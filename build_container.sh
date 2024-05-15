@@ -1,0 +1,1 @@
+docker build --pull -t open_car_dynamics:local .

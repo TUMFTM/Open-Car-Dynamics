@@ -1,0 +1,65 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "CLEAN: Build artifacts",
+            "command": "rm",
+            "args": ["-rf","build","log","install"],
+            "options": {"cwd": "${workspaceFolder}"}
+        },
+        {
+            "label": "CLEAN: Simulation Output",
+            "command": "rm",
+            "args": ["-rf","sim_out"],
+            "options": {"cwd": "${workspaceFolder}"}
+        },
+        {
+            "label": "BUILD: Complete Workspace",
+            "type": "shell",
+            "command": "/bin/bash -c 'source /opt/ros/humble/setup.bash  &&  cd ${workspaceFolder} && colcon build'",
+            "group": {"kind": "build","isDefault": false}
+        },
+        {
+            "label": "BUILD: Clean Build - Complete Workspace",
+            "dependsOn": ["CLEAN: Build artifacts","BUILD: Complete Workspace"],
+            "dependsOrder": "sequence",
+            "group": {"kind": "build","isDefault": true}
+        },
+        {
+            "label": "BUILD: Debug Build of Workspace",
+            "type": "shell",
+            "dependsOn": ["CLEAN: Build artifacts"],
+            "command": "/bin/bash -c 'source /opt/ros/humble/setup.bash  &&  cd ${workspaceFolder} && colcon build --cmake-args '-DCMAKE_BUILD_TYPE=Debug'"
+        },
+        {
+            "label": "SETUP: Local Debugging Configuration",
+            "type": "shell",
+            "command": "/bin/bash -c 'source /opt/ros/humble/setup.bash && bash ${workspaceFolder}/tools/setup_workspace_for_debugging.sh'",
+            "dependsOn": ["CLEAN: Build artifacts"],
+        },
+        {
+            "label": "RUN: CiL Simulation",
+            "dependsOn": ["BUILD: Complete Workspace"],
+            "type": "shell",
+            "command": "/bin/bash -c 'source /opt/ros/humble/setup.bash  && source ${workspaceFolder}/install/setup.bash && python3 ${workspaceFolder}/launch_cil.py'"
+        },
+        {
+            "label": "TEST: Package",
+            "type": "shell",
+            "command": "/bin/bash -c 'source /opt/ros/humble/setup.bash  && colcon build --packages-up-to ${input:package} && source ./install/setup.bash && colcon test --packages-select ${input:package} && colcon test-result --verbose'"
+        },
+        {
+            "label": "BUILD: Package",
+            "type": "shell",
+            "command": "/bin/bash -c 'source /opt/ros/humble/setup.bash  && colcon build --packages-up-to ${input:package}'"
+        },
+    ],
+    "inputs": [
+        {
+          "id": "package",
+          "type": "promptString",
+          "description": "Package name",
+          "default": "tum_helpers_cpp"
+        },
+      ]
+  }

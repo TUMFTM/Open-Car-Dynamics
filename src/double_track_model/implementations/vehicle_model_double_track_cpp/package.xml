@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<package format="3">
+  <name>vehicle_model_double_track_cpp</name>
+  <version>0.0.0</version>
+  <description>TODO: Package description</description>
+  <maintainer email="simon.hoffmann@tum.de">simon</maintainer>
+  <license>LGPLv3</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>vehicle_model_base_cpp</depend>
+  <depend>param_manager_cpp</depend>
+  <depend>vehicle_dynamics_double_track_cpp</depend>
+  <depend>vehicle_dynamics_helpers_cpp</depend>
+  <depend>simple_drivetrain_cpp</depend>
+  <depend>Eigen3</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_cmake_gtest</test_depend>
+  <test_depend>ament_cmake_clang_format</test_depend>
+  <test_depend>ament_cmake_cpplint</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

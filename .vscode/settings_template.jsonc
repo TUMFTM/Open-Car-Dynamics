@@ -1,0 +1,92 @@
+{
+    "git.repositoryScanMaxDepth": 2,
+    "git.autoRepositoryDetection": "subFolders",
+    "python.formatting.blackArgs": [
+        "--line-length",
+        "110"
+    ],
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.formatOnSave": true
+    },
+    "flake8.args": [
+        "--max-line-length=110"
+    ],
+    "python.autoComplete.extraPaths": [
+        "<%settings-pyton-path-local-packages%>"
+    ],
+    "python.analysis.extraPaths": [
+        "<%settings-pyton-path-local-packages%>"
+    ],
+    "[cpp]": {
+        "editor.formatOnSave": true
+    },
+    "C_Cpp.clang_format_path": "/usr/bin/clang-format-14",
+    "cmake.configureOnOpen": false,
+    "todo-tree.filtering.excludeGlobs": [
+        "**/iac_msgs/vectornav_msgs/*/**",
+        "**/iac_msgs/raptor_dbw_msgs/*/**"
+    ],
+    "todo-tree.general.tags": [
+        "BUG",
+        "SPAX",
+        "FIXME",
+        "TODO",
+        "NOTE",
+        "IMPROVEMENT",
+        "REFACTOR"
+    ],
+    "maptz.regionfolder": {
+        "[cpp]": { //Language selector
+            "foldEnd": "// #endregion", //Text inserted at the end of the fold
+            "foldEndRegex": "^\\s*//\\s*#?endregion\\b", //Regex used to find fold end text.
+            "foldStart": "; #region [NAME]", //Text inserted at the start of the fold.
+            //Use the `[NAME]` placeholder to indicate
+            //where the cursor should be placed after
+            //insertion
+            "foldStartRegex": "^\\s*//\\s*#?region\\b", ////Regex used to find fold start text.
+            "disableFolding": false //Turn off #region folding for this language
+        }
+    },
+    "todo-tree.highlights.customHighlight": {
+        "TODO": {
+            "icon": "code",
+            "gutterIcon": true
+        },
+        "FIXME": {
+            "iconColour": "red",
+            "gutterIcon": true
+        },
+        "BUG": {
+            "gutterIcon": true,
+            "iconColour": "orange"
+        },
+        "SPAX": {
+            "icon": "tools",
+            "gutterIcon": true,
+            "iconColour": "orange"
+        },
+        "NOTE": {
+            "icon": "list-ordered",
+            "gutterIcon": true,
+            "iconColour": "white"
+        },
+        "IMPROVEMENT": {
+            "icon": "light-bulb",
+            "iconColour": "yellow",
+            "gutterIcon": true
+        },
+        "REFACTOR": {
+            "icon": "arrow-switch",
+            "iconColour": "orange",
+            "gutterIcon": true
+        }
+    }
+    // Add the following to your user vs code config
+            // "region-viewer.markers-overrides": {
+            //     "cpp": {
+            //         "start": "^\\s*//\\s*#?region\\b(?<name>.*)", // <name> will be used to to give the region a name
+            //         "end": "^\\s*//\\s*#?endregion\\b"
+            //     }
+            // }
+}

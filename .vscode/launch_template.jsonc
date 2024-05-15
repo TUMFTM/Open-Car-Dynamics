@@ -1,0 +1,74 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Python: Current File",
+            "type": "python",
+            "request": "launch",
+            "program": "${file}",
+            "args": ["--debug"],
+            "console": "integratedTerminal",
+            "justMyCode": false,
+            // "preLaunchTask": "echo env_variable",
+            "linux": {
+                "env": {
+                    // region Source install folder automatically
+                    // "PYTHONPATH" : "<%pyton-path-local-packages%>:${env:PYTHONPATH}", # Hardcode values for default humble installation since retrieving env variabels in launch is buggy af
+                    "PYTHONPATH" : "<%pyton-path-local-packages%>:/opt/ros/humble/lib/python3.10/site-packages:/opt/ros/humble/local/lib/python3.10/dist-packages",
+                    //"LD_LIBRARY_PATH" : "<%ld-lib-local-built-messages%>:${env:LD_LIBRARY_PATH}",  # Hardcode values for default humble installation since retrieving env variabels in launch is buggy af
+                    "LD_LIBRARY_PATH" : "<%ld-lib-local-built-messages%>:/opt/ros/humble/lib/x86_64-linux-gnu:/opt/ros/humble/lib",  
+                    //"CMAKE_PREFIX_PATH" : "<%cmake-local-built-messages%>:${env:CMAKE_PREFIX_PATH}",  # Hardcode values for default humble installation since retrieving env variabels in launch is buggy af
+                    "CMAKE_PREFIX_PATH" : "<%cmake-local-built-messages%>",  
+                    //"AMENT_PREFIX_PATH" : "<%ament-local-built-messages%>:${env:AMENT_PREFIX_PATH}",  # Hardcode values for default humble installation since retrieving env variabels in launch is buggy af
+                    "AMENT_PREFIX_PATH" : "<%ament-local-built-messages%>:/opt/ros/humble",  
+                    //"COLCON_PREFIX_PATH": "${workspaceFolder}/install:${env:COLCON_PREFIX_PATH}"  # Hardcode values for default humble installation since retrieving env variabels in launch is buggy af
+                    "COLCON_PREFIX_PATH": "${workspaceFolder}/install"  
+                    // endregion
+                }
+            },
+            "purpose": ["debug-in-terminal"]
+        },
+        {
+            "name": "Debug ROS2 Node", // Don't forget to build the workspace in debug before starting this
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/install/${input:package}/lib/${input:package}/${input:program}",
+            "args": [],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+              {
+                "description": "Enable pretty-printing for gdb",
+                "text": "-enable-pretty-printing",
+                "ignoreFailures": true
+              }
+            ],
+          },
+    ],
+    "inputs": [
+        {
+          "id": "package",
+          "type": "promptString",
+          "description": "Package name",
+          "default": "template_package_cpp"
+        },
+        {
+          "id": "program",
+          "type": "promptString",
+          "description": "Node name (executable)",
+          "default": "template_node"
+        },
+        {
+          "id": "launch",
+          "type": "promptString",
+          "description": "Launch file",
+          "default": "test_launch.py"
+        }
+      ]
+}
