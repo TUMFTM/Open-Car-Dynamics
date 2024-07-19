@@ -94,9 +94,20 @@ However, we needed a real-time capable, modularized model for an autonomous race
 
 ## References
 
-The paper containing the description of the model is submitted and already accepted for publication at the [IEEE IV 2024](https://ieee-iv.org/2024/).
-We will add the reference to the paper once it is published.
-Please cite the paper if you are using Open Car Dynamics.
+If you use Open Car Dynamics in your work please consider citing our paper [Analyzing the Impact of Simulation Fidelity on the Evaluation of Autonomous Driving Motion Control](https://ieeexplore.ieee.org/document/10588858/).
+```
+@INPROCEEDINGS{10588858,
+  author={Sagmeister, Simon and Kounatidis, Panagiotis and Goblirsch, Sven and Lienkamp, Markus},
+  booktitle={2024 IEEE Intelligent Vehicles Symposium (IV)}, 
+  title={Analyzing the Impact of Simulation Fidelity on the Evaluation of Autonomous Driving Motion Control}, 
+  year={2024},
+  volume={},
+  number={},
+  pages={230-237},
+  keywords={Measurement;Analytical models;Heuristic algorithms;Software algorithms;Approximation algorithms;Data models;Vehicle dynamics},
+  doi={10.1109/IV55156.2024.10588858}}
+
+```
 
 ### Core Developers
  - [Simon Sagmeister](mailto:simon.sagmeister@tum.de)
@@ -113,4 +124,6 @@ Special thanks to my colleagues for the regular technical feedback and talks dur
 - Frederik Werner
 
 
+We gratefully acknowledge financial support by:
+ - Deutsche Forschungsgemeinschaft (DFG, German Research Foundation) | Project Number - 469341384
 
