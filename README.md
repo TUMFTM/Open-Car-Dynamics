@@ -1,5 +1,11 @@
 # Open Car Dynamics
 
+[![ROS 2](https://img.shields.io/badge/ROS_2-Humble-22314E.svg?logo=ros&logoColor=white)](https://docs.ros.org/en/humble/)
+[![C++](https://img.shields.io/badge/C%2B%2B-20-00599C?logo=c%2B%2B&logoColor=white)](https://isocpp.org/)
+[![License: LGPL v3](https://img.shields.io/badge/License-LGPL%20v3-blue.svg)](https://www.gnu.org/licenses/lgpl-3.0)
+[![Ubuntu](https://img.shields.io/badge/Ubuntu-22.04-E95420?logo=ubuntu&logoColor=white)](https://ubuntu.com/)
+[![DOI](https://img.shields.io/badge/DOI-10.1109%2FIV55156.2024.10588858-blue)](https://doi.org/10.1109/IV55156.2024.10588858)
+
 The Open Car Dynamics library aims to provide a comprehensive, simple, and easy-to-use implementation of a vehicle's dynamic behavior.
 The project's primary focus is to enable closed-loop simulation of trajectory following controllers in autonomous driving.
 Considering this goal, the core philosophy behind this implementation is to model the vehicle's behavior in as much detail as necessary but as simply as possible. Keeping the model concise and relatively simple drastically simplifies parametrization and reduces the effort of adapting the model to one's requirements.
