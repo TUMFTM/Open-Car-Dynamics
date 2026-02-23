@@ -1,0 +1,24 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package format="3">
+  <name>ocd_drivetrain_model_base_cpp</name>
+  <version>2.0.0</version>
+  <description>Base classes and concepts for drivetrain models in C++</description>
+  <maintainer email="simon.sagmeister@tum.de">Simon Sagmeister</maintainer>
+  <license>Apache 2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>tum_types_cpp</depend>
+  <depend>tsl_logger_cpp</depend>
+  <depend>ocd_types_cpp</depend>
+  <depend>param_management_cpp</depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_cmake_gtest</test_depend>
+  <test_depend>ament_cmake_clang_format</test_depend>
+  <test_depend>ament_cmake_cpplint</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

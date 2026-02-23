@@ -1,0 +1,34 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package format="3">
+  <name>ocd_vehicle_model_node_cpp</name>
+  <version>2.0.0</version>
+  <description>A generic ros2 node which serves a vehicle model</description>
+  <maintainer email="simon.sagmeister@tum.de">Simon Sagmeister</maintainer>
+  <license>Apache 2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+
+  <depend>rclcpp</depend>
+  <depend>param_management_cpp</depend>
+  <depend>param_management_ros2_integration_cpp</depend>
+  <depend>tsl_logger_cpp</depend>
+  <depend>tsl_ros2_publisher_cpp</depend>
+  <depend>nav_msgs</depend>
+  <depend>tum_msgs</depend>
+  <depend>ocd_types_cpp</depend>
+  <depend>tum_type_conversions_ros_cpp</depend>
+  <depend>tum_ros_helpers_cpp</depend>
+  
+  <depend>ocd_vehicle_model_base_cpp</depend>
+  <depend>ocd_communication_handler_base_cpp</depend>
+  
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_cmake_gtest</test_depend>
+  <test_depend>ament_cmake_clang_format</test_depend>
+  <test_depend>ament_cmake_cpplint</test_depend>
+  <exec_depend>ros2launch</exec_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

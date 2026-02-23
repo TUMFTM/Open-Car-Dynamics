@@ -1,1 +1,0 @@
-docker stop vehicle_model_double_track_cpp

@@ -2,12 +2,12 @@
     "configurations": [
       {
         "name": "Linux",
-        "includePath": ["${workspaceFolder}/**", "/opt/ros/${ROS_DISTRO}/include", "/usr/include/python3.10/"],
+        "includePath": ["${workspaceFolder}/**", "/opt/ros/${ROS_DISTRO}/include", "/usr/include/python3.10/",  "/usr/include/python3.12/"],
         "defines": [],
         "compilerPath": "/usr/bin/gcc",
         "compileCommands": "${workspaceFolder}/build/compile_commands.json",
         "cStandard": "c11",
-        "cppStandard": "c++17",
+        "cppStandard": "c++20",
         "intelliSenseMode": "clang-x64"
       }
     ],

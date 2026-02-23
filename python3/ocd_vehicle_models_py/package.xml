@@ -1,0 +1,41 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package format="3">
+  <name>ocd_vehicle_models_py</name>
+  <version>2.0.0</version>
+  <description>Python package for using OCD in Python</description>
+  <maintainer email="simon.sagmeister@tum.de">Simon Sagmeister</maintainer>
+  <license>Apache 2.0</license>
+
+  <buildtool_depend>ament_cmake_ros</buildtool_depend>
+  <buildtool_depend>ament_cmake_python</buildtool_depend>
+  <buildtool_depend>python_cmake_module</buildtool_depend>
+
+  <depend>pybind11_vendor</depend>
+
+  
+  <depend>tum_types_cpp</depend>
+  <depend>ocd_types_cpp</depend>
+  <depend>ocd_aerodynamics_models_cpp</depend>
+  <depend>ocd_drivetrain_fx_cpp</depend>
+  <depend>ocd_drivetrain_wheel_torque_cpp</depend>
+  <depend>ocd_drivetrain_rwd_lsd_cpp</depend>
+  <depend>ocd_steering_actuator_pt1_cpp</depend>
+  <depend>ocd_tire_models_cpp</depend>
+  <depend>ocd_vehicle_dynamics_double_track_cpp</depend>
+  <depend>ocd_vehicle_dynamics_single_track_cpp</depend>
+  <depend>ocd_vehicle_model_cpp</depend>
+  
+  <exec_depend>tum_types_py</exec_depend>
+  <exec_depend>param_management_py</exec_depend>
+  <exec_depend>ocd_types_py</exec_depend>
+  <exec_depend>tsl_logger_py</exec_depend>
+  <exec_depend>ocd_steering_actuator_pt1_py</exec_depend>
+  <exec_depend>ocd_drivetrain_wheel_torque_py</exec_depend>
+  <exec_depend>ocd_drivetrain_rwd_lsd_py</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

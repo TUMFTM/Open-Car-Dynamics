@@ -1,0 +1,23 @@
+<?xml version='1.0' encoding='utf-8'?>
+<package format="3">
+  <name>ocd_drivetrain_fx_cpp</name>
+  <version>2.0.0</version>
+  <description>Drivetrain Equations for a Rear Wheel Driven Car with LSD and Longitudinal Force as
+    Input</description>
+  <maintainer email="simon.sagmeister@tum.de">Simon Sagmeister</maintainer>
+  <license>Apache 2.0</license>
+
+  <buildtool_depend>ament_cmake</buildtool_depend>
+  <depend>ocd_drivetrain_rwd_lsd_cpp</depend>
+  <depend>ocd_drivetrain_model_base_cpp</depend>
+
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_cmake_gtest</test_depend>
+  <test_depend>ament_cmake_clang_format</test_depend>
+  <test_depend>ament_cmake_cpplint</test_depend>
+
+  <export>
+    <build_type>ament_cmake</build_type>
+  </export>
+</package>

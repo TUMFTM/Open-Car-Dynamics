@@ -1,0 +1,11 @@
+#!/usr/bin/env bash
+
+# Prevent double sourcing
+[ -n "$_OPEN_CAR_DYNAMICS_CPP_SETUP" ] && return
+export _OPEN_CAR_DYNAMICS_CPP_SETUP=1
+
+# Hardcoded install prefix (configured by CMake)
+INSTALL_PREFIX="@CMAKE_INSTALL_PREFIX@"
+
+export LD_LIBRARY_PATH="$INSTALL_PREFIX/lib${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+export CMAKE_PREFIX_PATH="$INSTALL_PREFIX${CMAKE_PREFIX_PATH:+:$CMAKE_PREFIX_PATH}"
