@@ -89,92 +89,100 @@ class VehicleDynamicsDoubleTrackEqns
   // Variables that are directly calculated from the given parameters
   struct DependentParameters
   {
-    double l_r;
-    double m_sprung;    // Sprung mass
-    double l_r_sprung;  // Describing COG of the sprung mass
-    double l_f_sprung;  // Describing COG of the sprung mass
+    double l_r = 0.0;
+    double m_sprung = 0.0;    // Sprung mass
+    double l_r_sprung = 0.0;  // Describing COG of the sprung mass
+    double l_f_sprung = 0.0;  // Describing COG of the sprung mass
     // Coefficient for calculating anti squat and anti dive forces from the axle
     // See page A-30 of
     // https://babel.hathitrust.org/cgi/pt?id=mdp.39015075298698&view=1up&seq=146&skin=2021
-    double slf;
-    double slr;
-    double sadf_deceleration;
-    double sadr_deceleration;
-    double sadf_acceleration;
-    double sadr_acceleration;
+    double slf = 0.0;
+    double slr = 0.0;
+    double sadf_deceleration = 0.0;
+    double sadr_deceleration = 0.0;
+    double sadf_acceleration = 0.0;
+    double sadr_acceleration = 0.0;
   };
   struct IntermediateResults
   {
     // Sums up all effective steering angles including toe
-    double_per_wheel_t effective_steering_angle_per_wheel_rad;
+    double_per_wheel_t effective_steering_angle_per_wheel_rad{0, 0, 0, 0};
     // Tire spring compression at standstill
-    double_per_wheel_t tire_spring_initial_compression_m;
-    double_per_wheel_t tire_spring_force_N;  // Tire spring forces
-    double_per_wheel_t vertical_tire_force_N;
-    double_per_wheel_t antiroll_bar_force_N;  // Antiroll bar forces
+    double_per_wheel_t tire_spring_initial_compression_m{0, 0, 0, 0};
+    double_per_wheel_t tire_spring_force_N{0, 0, 0, 0};  // Tire spring forces
+    double_per_wheel_t vertical_tire_force_N{0, 0, 0, 0};
+    double_per_wheel_t antiroll_bar_force_N{0, 0, 0, 0};  // Antiroll bar forces
     // The actual velocity vector of the wheel in the contact patchoriginated in the vehicles
     // movement "Velocity over ground"
-    vector2d_per_wheel_t velocity_wheel_over_ground_mps;
+    vector2d_per_wheel_t velocity_wheel_over_ground_mps{
+      Eigen::Vector2d::Zero(), Eigen::Vector2d::Zero(), Eigen::Vector2d::Zero(),
+      Eigen::Vector2d::Zero()};
     // The velocity vector of each tire rotated in each tires coordinate system
-    vector2d_per_wheel_t velocity_wheel_over_ground_tire_frame_mps;
-    double_per_wheel_t velocity_tire_rotation_mps;
+    vector2d_per_wheel_t velocity_wheel_over_ground_tire_frame_mps{
+      Eigen::Vector2d::Zero(), Eigen::Vector2d::Zero(), Eigen::Vector2d::Zero(),
+      Eigen::Vector2d::Zero()};
+    double_per_wheel_t velocity_tire_rotation_mps{0, 0, 0, 0};
     // Long slip and slip angle for each tire
-    double_per_wheel_t tire_longitudinal_slip;
-    double_per_wheel_t tire_slip_angle_rad;
+    double_per_wheel_t tire_longitudinal_slip{0, 0, 0, 0};
+    double_per_wheel_t tire_slip_angle_rad{0, 0, 0, 0};
     // Tire forces in longitudinal and lateral direction of each tire
-    vector2d_per_wheel_t tire_forces_tire_frame_N;
-    vector2d_per_wheel_t tire_forces_N;
+    vector2d_per_wheel_t tire_forces_tire_frame_N{
+      Eigen::Vector2d::Zero(), Eigen::Vector2d::Zero(), Eigen::Vector2d::Zero(),
+      Eigen::Vector2d::Zero()};
+    vector2d_per_wheel_t tire_forces_N{
+      Eigen::Vector2d::Zero(), Eigen::Vector2d::Zero(), Eigen::Vector2d::Zero(),
+      Eigen::Vector2d::Zero()};
     // Suspension spring compression at standstill
-    double_per_wheel_t suspension_spring_initial_compression_m;
-    double_per_wheel_t suspension_spring_compression_m;
+    double_per_wheel_t suspension_spring_initial_compression_m{0, 0, 0, 0};
+    double_per_wheel_t suspension_spring_compression_m{0, 0, 0, 0};
     // Compression speed of the damper in mps
-    double_per_wheel_t suspension_damper_compression_speed_mps;
+    double_per_wheel_t suspension_damper_compression_speed_mps{0, 0, 0, 0};
     // Forces in the suspension springs
-    double_per_wheel_t suspension_spring_force_N;
+    double_per_wheel_t suspension_spring_force_N{0, 0, 0, 0};
     // Forces in the dampers
-    double_per_wheel_t suspension_damper_force_N;
+    double_per_wheel_t suspension_damper_force_N{0, 0, 0, 0};
     // Torque on the tire because of rolling resistance
     // They won't be explicitly considered for calculating the lateral acceleration
     // since they will be considered as additional torque
     // keeping the tire from spinning faster
-    double_per_wheel_t tire_rolling_resistance_N;
+    double_per_wheel_t tire_rolling_resistance_N{0, 0, 0, 0};
     // Resulting vertical axle force
-    double_per_wheel_t axle_vertical_force_N;
+    double_per_wheel_t axle_vertical_force_N{0, 0, 0, 0};
     // Resulting force from suspension
-    double_per_wheel_t resulting_suspension_force_N;
+    double_per_wheel_t resulting_suspension_force_N{0, 0, 0, 0};
     // Resulting veritcal force on the wheel
-    double_per_wheel_t resulting_vertical_force_on_wheel_N;
+    double_per_wheel_t resulting_vertical_force_on_wheel_N{0, 0, 0, 0};
     // Aerodynamics
-    vector3d_t aero_force_N;    // On the vehicle
-    vector3d_t aero_torque_Nm;  // On the vehicle body
+    vector3d_t aero_force_N{0, 0, 0};    // On the vehicle
+    vector3d_t aero_torque_Nm{0, 0, 0};  // On the vehicle body
     // Resulting forces
-    vector3d_t resulting_force_N;    // On the vehicle
-    vector3d_t resulting_torque_Nm;  // On the vehicle body
+    vector3d_t resulting_force_N{0, 0, 0};    // On the vehicle
+    vector3d_t resulting_torque_Nm{0, 0, 0};  // On the vehicle body
     // Dynamic Tire Radius
-    double_per_wheel_t dynamic_tire_radius_m;
+    double_per_wheel_t dynamic_tire_radius_m{0, 0, 0, 0};
   };
   //
-  double_per_wheel_t wheel_speeds_radps_;
-  double_per_wheel_t steering_angle_per_wheel_rad_;
+  double_per_wheel_t wheel_speeds_radps_{0, 0, 0, 0};
+  double_per_wheel_t steering_angle_per_wheel_rad_{0, 0, 0, 0};
   //
-  StateVectorType x_vec_;
-  StateVectorType x_dot_vec_;
+  StateVectorType x_vec_ = StateVectorType::Zero();
+  StateVectorType x_dot_vec_ = StateVectorType::Zero();
   //
-  double_per_wheel_t drivetrain_load_torque_per_wheel_Nm_;
-  double_per_wheel_t steering_load_torque_per_wheel_Nm_;
-  types::VehicleDynamicsModelOutput vd_output_;
+  double_per_wheel_t drivetrain_load_torque_per_wheel_Nm_{0, 0, 0, 0};
+  double_per_wheel_t steering_load_torque_per_wheel_Nm_{0, 0, 0, 0};
+  types::VehicleDynamicsModelOutput vd_output_{};
   //
-  IntermediateResults imr_;
+  IntermediateResults imr_{};
   //
-  types::ExternalInfluences external_influences_;
+  types::ExternalInfluences external_influences_{};
   tam::types::common::DataPerWheel<TireModelT> tire_models_;
   AeroModelT aero_model_;
   Parameters p_;
-  DependentParameters p_dep_;
+  DependentParameters p_dep_{};
   //
   // Constants
   static constexpr double G_CONST = 9.81;  // mps2
-  double_per_wheel_t tire_spring_initial_compression_;
+  double_per_wheel_t tire_spring_initial_compression_{0, 0, 0, 0};
   //
   void calculate_intermediate_results();
   // Function to calculate pars of the intermediate results.

@@ -14,8 +14,8 @@
 #include "ocd_aerodynamics_model_base_cpp/concept.hpp"
 #include "ocd_tire_model_base_cpp/concept.hpp"
 #include "ocd_types_cpp/types.hpp"
-#include "ocd_vehicle_dynamics_single_track_cpp/states.hpp"
 #include "ocd_vehicle_dynamics_model_base_cpp/base_class.hpp"
+#include "ocd_vehicle_dynamics_single_track_cpp/states.hpp"
 #include "tum_helpers_cpp/constants.hpp"
 #include "tum_helpers_cpp/numerical.hpp"
 #include "tum_types_cpp/common.hpp"
@@ -63,55 +63,63 @@ class VehicleDynamicsSingleTrackEqns
   // Variables that are directly calculated from the given parameters
   struct DependentParameters
   {
-    double l_r;
+    double l_r = 0.0;
   };
   struct IntermediateResults
   {
     // Effective steering angles (no toe in single track)
-    double_per_wheel_t effective_steering_angle_per_wheel_rad;
+    double_per_wheel_t effective_steering_angle_per_wheel_rad{0, 0, 0, 0};
     // Static vertical tire force
-    double_per_wheel_t vertical_tire_force_N;
+    double_per_wheel_t vertical_tire_force_N{0, 0, 0, 0};
     // The actual velocity vector of the wheel in the contact patch
     // originated in the vehicles movement "Velocity over ground"
-    vector2d_per_wheel_t velocity_wheel_over_ground_mps;
+    vector2d_per_wheel_t velocity_wheel_over_ground_mps{
+      Eigen::Vector2d::Zero(), Eigen::Vector2d::Zero(), Eigen::Vector2d::Zero(),
+      Eigen::Vector2d::Zero()};
     // The velocity vector of each tire rotated in each tires coordinate system
-    vector2d_per_wheel_t velocity_wheel_over_ground_tire_frame_mps;
-    double_per_wheel_t velocity_tire_rotation_mps;
+    vector2d_per_wheel_t velocity_wheel_over_ground_tire_frame_mps{
+      Eigen::Vector2d::Zero(), Eigen::Vector2d::Zero(), Eigen::Vector2d::Zero(),
+      Eigen::Vector2d::Zero()};
+    double_per_wheel_t velocity_tire_rotation_mps{0, 0, 0, 0};
     // Long slip and slip angle for each tire
-    double_per_wheel_t tire_longitudinal_slip;
-    double_per_wheel_t tire_slip_angle_rad;
+    double_per_wheel_t tire_longitudinal_slip{0, 0, 0, 0};
+    double_per_wheel_t tire_slip_angle_rad{0, 0, 0, 0};
     // Tire forces in longitudinal and lateral direction of each tire
-    vector2d_per_wheel_t tire_forces_tire_frame_N;
-    vector2d_per_wheel_t tire_forces_N;
+    vector2d_per_wheel_t tire_forces_tire_frame_N{
+      Eigen::Vector2d::Zero(), Eigen::Vector2d::Zero(), Eigen::Vector2d::Zero(),
+      Eigen::Vector2d::Zero()};
+    vector2d_per_wheel_t tire_forces_N{
+      Eigen::Vector2d::Zero(), Eigen::Vector2d::Zero(), Eigen::Vector2d::Zero(),
+      Eigen::Vector2d::Zero()};
     // Torque on the tire because of rolling resistance
-    double_per_wheel_t tire_rolling_resistance_N;
+    double_per_wheel_t tire_rolling_resistance_N{0, 0, 0, 0};
     // Aerodynamics
-    vector3d_t aero_force_N;    // On the vehicle
-    vector3d_t aero_torque_Nm;  // On the vehicle body
+    vector3d_t aero_force_N{0, 0, 0};    // On the vehicle
+    vector3d_t aero_torque_Nm{0, 0, 0};  // On the vehicle body
     // Resulting forces
-    vector3d_t resulting_force_N;    // On the vehicle
-    vector3d_t resulting_torque_Nm;  // On the vehicle body
+    vector3d_t resulting_force_N{0, 0, 0};    // On the vehicle
+    vector3d_t resulting_torque_Nm{0, 0, 0};  // On the vehicle body
     // Dynamic Tire Radius
-    double_per_wheel_t dynamic_tire_radius_m;
+    double_per_wheel_t dynamic_tire_radius_m{0, 0, 0, 0};
   };
   //
-  double_per_wheel_t wheel_speeds_radps_;
-  double_per_wheel_t steering_angle_per_wheel_rad_;
+  double_per_wheel_t wheel_speeds_radps_{0, 0, 0, 0};
+  double_per_wheel_t steering_angle_per_wheel_rad_{0, 0, 0, 0};
   //
-  StateVectorType x_vec_;
-  StateVectorType x_dot_vec_;
+  StateVectorType x_vec_ = StateVectorType::Zero();
+  StateVectorType x_dot_vec_ = StateVectorType::Zero();
   //
-  double_per_wheel_t drivetrain_load_torque_per_wheel_Nm_;
-  double_per_wheel_t steering_load_torque_per_wheel_Nm_;
-  types::VehicleDynamicsModelOutput vd_output_;
+  double_per_wheel_t drivetrain_load_torque_per_wheel_Nm_{0, 0, 0, 0};
+  double_per_wheel_t steering_load_torque_per_wheel_Nm_{0, 0, 0, 0};
+  types::VehicleDynamicsModelOutput vd_output_{};
   //
-  IntermediateResults imr_;
+  IntermediateResults imr_{};
   //
-  types::ExternalInfluences external_influences_;
+  types::ExternalInfluences external_influences_{};
   tam::types::common::DataPerWheel<TireModelT> tire_models_;
   AeroModelT aero_model_;
   Parameters p_;
-  DependentParameters p_dep_;
+  DependentParameters p_dep_{};
   //
   // Constants
   static constexpr double G_CONST = 9.81;  // mps2

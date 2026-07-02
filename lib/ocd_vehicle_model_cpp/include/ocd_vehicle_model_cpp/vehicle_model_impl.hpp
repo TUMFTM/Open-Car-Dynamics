@@ -84,7 +84,7 @@ VEHICLE_T::state_vector_t VEHICLE_T::ode(double t, state_vector_t x_)
   // Silence warning of unused param
   (void)t;
 
-  state_vector_t x_dot_;
+  state_vector_t x_dot_ = state_vector_t::Zero();
 
   set_state_vector_of_models(x_);  // Set state vector of models
 
@@ -161,6 +161,9 @@ void VEHICLE_T::reset()
   steering_angle_per_wheel_rad_ = {};
   external_influences_ = {};
   drivetrain_load_torque_per_wheel_Nm_ = {};
+  vehicle_dynamics_output_ = {};
+  model_output_ = {};
+  set_state_vector_of_models(x);
 }
 template <
   interfaces::concepts::DrivetrainModel DT_MODEL_T,

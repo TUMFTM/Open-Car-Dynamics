@@ -48,12 +48,12 @@ private:
   {
     double T_PT1, angle_max_rad, angle_rate_max_radps, static_offset_rad;
   } p_;
-  StateVectorType x_vec_;
-  StateVectorType x_dot_vec_;
-  double requested_steering_angle_rad_;
-  double measured_steering_angle_rad_;
-  double actual_steering_angle_rad_;
-  DoublePerWheelType steering_load_torque_per_wheel_Nm_;
+  StateVectorType x_vec_ = StateVectorType::Zero();
+  StateVectorType x_dot_vec_ = StateVectorType::Zero();
+  double requested_steering_angle_rad_ = 0.0;
+  double measured_steering_angle_rad_ = 0.0;
+  double actual_steering_angle_rad_ = 0.0;
+  DoublePerWheelType steering_load_torque_per_wheel_Nm_{0, 0, 0, 0};
 
   tam::tsl::ReferenceLogger::SharedPtr logger_ = std::make_shared<tam::tsl::ReferenceLogger>();
   tam::pmg::ParamReferenceManager::SharedPtr param_manager_ =

@@ -55,8 +55,8 @@ public:
   } p_;
   struct
   {
-    double ride_height_front_m;
-    double ride_height_rear_m;
+    double ride_height_front_m = 0.0;
+    double ride_height_rear_m = 0.0;
   } imr_;
   types::AeroModelOutput evaluate(types::AeroModelInput const & input) override;
   void declare_parameters(
