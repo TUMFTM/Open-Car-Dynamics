@@ -74,22 +74,22 @@ private:
     typename SA_MODEL_T::FeedbackType>
     steering_actuator_feedback_;
 
-  double_per_wheel_t wheel_speeds_radps_;
-  double_per_wheel_t steering_angle_per_wheel_rad_;
-  double_per_wheel_t drivetrain_load_torque_per_wheel_Nm_;
-  double_per_wheel_t steering_load_torque_per_wheel_Nm_;
-  types::VehicleDynamicsModelOutput vehicle_dynamics_output_;
+  double_per_wheel_t wheel_speeds_radps_{0, 0, 0, 0};
+  double_per_wheel_t steering_angle_per_wheel_rad_{0, 0, 0, 0};
+  double_per_wheel_t drivetrain_load_torque_per_wheel_Nm_{0, 0, 0, 0};
+  double_per_wheel_t steering_load_torque_per_wheel_Nm_{0, 0, 0, 0};
+  types::VehicleDynamicsModelOutput vehicle_dynamics_output_{};
 
-  types::ExternalInfluences external_influences_;
+  types::ExternalInfluences external_influences_{};
 
-  typename types::VehicleModelOutput model_output_;
+  typename types::VehicleModelOutput model_output_{};
 
   // debugging
   tam::tsl::ValueLogger::SharedPtr debug_container_ = std::make_shared<tam::tsl::ValueLogger>();
   tam::tsl::LoggerComposer::SharedPtr debug_container_composed_ =
     std::make_shared<tam::tsl::LoggerComposer>(
       std::vector<tam::tsl::LoggerAccessInterface::SharedPtr>{debug_container_});
-  Eigen::Matrix<double, LEN_STATE_VECTOR, 1> x;
+  Eigen::Matrix<double, LEN_STATE_VECTOR, 1> x = state_vector_t::Zero();
 
   // region functions for structuring
   void declare_parameters();

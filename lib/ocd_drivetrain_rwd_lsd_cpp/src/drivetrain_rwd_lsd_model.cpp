@@ -64,6 +64,7 @@ void DrivetrainModel_RWD_LSD::register_log_signals()
 {
   logger_->log("drivetrain_load_torque_per_wheel_Nm", &eqns_.drivetrain_load_torque_per_wheel_Nm_);
   logger_->log("M_LSD_Nm", &eqns_.M_LSD_Nm);
+  logger_->log("I_wheel_low_speed_kgm2", &eqns_.I_wheel_low_speed_kgm2);
   logger_->log(
     "input/brake_torque_per_wheel_Nm", &eqns_.drivetrain_input_.brake_torque_per_wheel_Nm);
   logger_->log(

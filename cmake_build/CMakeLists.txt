@@ -27,11 +27,11 @@ endforeach()
 
 # Manually add the extra dependencies with absolute paths
 set(EXTRA_DEPS
-    "dependencies/iac_common/submodules/parameter_management/param_management_cpp"
-    "dependencies/iac_common/submodules/time_series_logging/tsl_logger_cpp"
-    "dependencies/iac_common/tum_helpers_cpp"
-    "dependencies/iac_common/tum_types_cpp"
-    "dependencies/iac_common/vendor_pkgs/matplotlib_cpp"
+    "submodules/tam__common/submodules/parameter_management/param_management_cpp"
+    "submodules/tam__common/submodules/time_series_logging/tsl_logger_cpp"
+    "submodules/tam__common/tum_helpers_cpp"
+    "submodules/tam__common/tum_types_cpp"
+    "submodules/tam__common/vendor_pkgs/matplotlib_cpp"
 )
 
 foreach(DEP ${EXTRA_DEPS})

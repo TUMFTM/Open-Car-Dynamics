@@ -39,16 +39,16 @@ class DrivetrainEquationsDirectTorque
   };
   //
   Parameters p;
-  state_vector_t x_vec_;
+  state_vector_t x_vec_ = state_vector_t::Zero();
   DriverInput driver_input_;
-  double_per_wheel_t drivetrain_load_torque_per_wheel_Nm_;
+  double_per_wheel_t drivetrain_load_torque_per_wheel_Nm_{0, 0, 0, 0};
   //
   // Calculated by evaluate
-  state_vector_t x_dot_vec_;
+  state_vector_t x_dot_vec_ = state_vector_t::Zero();
   // Intermediate results - Also calculated during the evaluate
-  double I_wheel_low_speed_kgm2;  // Add additional inertia at low speeds to avoid
-                                  // oscillations due to integration
-  bool bool_clamp_xdot_to_avoid_reverse;
+  double I_wheel_low_speed_kgm2 = 0.0;  // Add additional inertia at low speeds to avoid
+                                        // oscillations due to integration
+  bool bool_clamp_xdot_to_avoid_reverse = false;
   //
   // Function to calc intermediate results.
   void calc_I_wheel_low_speed_kgm2();
