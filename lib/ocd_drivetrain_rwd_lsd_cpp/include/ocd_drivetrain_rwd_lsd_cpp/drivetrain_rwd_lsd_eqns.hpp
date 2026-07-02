@@ -42,16 +42,16 @@ class DrivetrainEquations_RWD_LSD
   };
   //
   Parameters p;
-  state_vector_t x_vec_;
+  state_vector_t x_vec_ = state_vector_t::Zero();
   DriverInput drivetrain_input_;
-  double_per_wheel_t drivetrain_load_torque_per_wheel_Nm_;
+  double_per_wheel_t drivetrain_load_torque_per_wheel_Nm_{0, 0, 0, 0};
 
   // Calculated by evaluate function
-  state_vector_t x_dot_vec_;
+  state_vector_t x_dot_vec_ = state_vector_t::Zero();
   // The torque output of the transmission on the rear axle
-  double M_LSD_Nm;
-  double I_wheel_low_speed_kgm2;  // Add additional inertia at low speeds to avoid
-                                  // oscillations due to integration
+  double M_LSD_Nm = 0.0;
+  double I_wheel_low_speed_kgm2 = 0.0;  // Add additional inertia at low speeds to avoid
+                                        // oscillations due to integration
   //
   // Function to calc intermediate results.
   void calc_I_wheel_low_speed_kgm2();
