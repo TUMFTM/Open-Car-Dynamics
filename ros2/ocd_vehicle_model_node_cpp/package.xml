@@ -15,6 +15,7 @@
   <depend>tsl_ros2_publisher_cpp</depend>
   <depend>nav_msgs</depend>
   <depend>tum_msgs</depend>
+  <depend>ocd_interfaces</depend>
   <depend>ocd_types_cpp</depend>
   <depend>tum_type_conversions_ros_cpp</depend>
   <depend>tum_ros_helpers_cpp</depend>
