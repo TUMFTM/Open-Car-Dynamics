@@ -471,6 +471,7 @@ void VehicleDynamicsDoubleTrackEqns<TireModelT, AeroModelT>::calculate_aerodynam
   types::AeroModelInput input;
   input.vx_mps = x_vec_[x::v_x_mps];
   input.vy_mps = x_vec_[x::v_y_mps];
+  input.wind_mps = external_influences_.wind_mps;
   input.pitch_angle_rad = x_vec_[x::theta_rad];
   input.z_m = x_vec_[x::z_m];
 

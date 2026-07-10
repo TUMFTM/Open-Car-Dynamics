@@ -65,7 +65,7 @@ VehicleModelNode<VEHICLE_T, DT_COMM_HANDLER_T, SA_COMM_HANDLER_T>::VehicleModelN
 
   auto qos = tam::ros::get_qos(tam::ros::TopicType::DEFAULT);
 
-  sub_external_influences_ = this->create_subscription<tum_msgs::msg::TUMExternalVehicleInfluences>(
+  sub_external_influences_ = this->create_subscription<ocd_interfaces::msg::ExternalInfluences>(
     std::string(topic_sub_external_influences_), qos,
     std::bind(
       &VehicleModelNode<
@@ -286,7 +286,7 @@ template <
   interfaces::concepts::CommunicationHandler DT_COMM_HANDLER_T,
   interfaces::concepts::CommunicationHandler SA_COMM_HANDLER_T>
 void VehicleModelNode<VEHICLE_T, DT_COMM_HANDLER_T, SA_COMM_HANDLER_T>::
-  external_influences_callback(const tum_msgs::msg::TUMExternalVehicleInfluences::SharedPtr msg)
+  external_influences_callback(const ocd_interfaces::msg::ExternalInfluences::SharedPtr msg)
 {
   has_new_external_influence_ = true;
   external_input_ = tam::ocd::helpers::type_conversion::external_influences_type_from_msg(*msg);

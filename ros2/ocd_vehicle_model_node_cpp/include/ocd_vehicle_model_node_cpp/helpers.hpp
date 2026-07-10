@@ -3,19 +3,20 @@
 #include <geometry_msgs/msg/vector3.hpp>
 #include <nav_msgs/msg/odometry.hpp>
 
+#include "ocd_interfaces/msg/external_influences.hpp"
 #include "ocd_types_cpp/types.hpp"
-#include "tum_msgs/msg/tum_external_vehicle_influences.hpp"
 #include "tum_msgs/msg/tum_float64_per_wheel.hpp"
 #include "tum_type_conversions_ros_cpp/orientation.hpp"
 #include "tum_type_conversions_ros_cpp/tum_type_conversions.hpp"
 namespace tam::ocd::helpers::type_conversion
 {
 inline tam::ocd::types::ExternalInfluences external_influences_type_from_msg(
-  tum_msgs::msg::TUMExternalVehicleInfluences const & msg)
+  ocd_interfaces::msg::ExternalInfluences const & msg)
 {
   types::ExternalInfluences type_;
-  type_.external_force_N = tam::type_conversions::vector_3d_type_from_msg(msg.external_force);
-  type_.external_torque_Nm = tam::type_conversions::vector_3d_type_from_msg(msg.external_torque);
+  type_.external_force_N = tam::type_conversions::vector_3d_type_from_msg(msg.wrench.force);
+  type_.external_torque_Nm = tam::type_conversions::vector_3d_type_from_msg(msg.wrench.torque);
+  type_.wind_mps = tam::type_conversions::vector_3d_type_from_msg(msg.wind_mps);
   type_.lambda_mue = tam::type_conversions::data_per_wheel_type_from_msg(msg.lambda_mue);
   type_.z_height_road_m = tam::type_conversions::data_per_wheel_type_from_msg(msg.z_height_road_m);
   return type_;

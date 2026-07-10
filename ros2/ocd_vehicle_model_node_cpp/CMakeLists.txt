@@ -19,7 +19,7 @@ set(NODE_DEPENDENCIES
     tsl_ros2_publisher_cpp
     nav_msgs
     tum_msgs
-    ocd_types_cpp
+    ocd_interfaces
     ocd_types_cpp
     tum_ros_helpers_cpp
     tum_type_conversions_ros_cpp
