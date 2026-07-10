@@ -17,6 +17,12 @@ geometry_msgs::msg::Wrench wrench_filled(double v)
   out.torque.x = out.torque.y = out.torque.z = v;
   return out;
 }
+geometry_msgs::msg::Vector3 vector3_filled(double v)
+{
+  geometry_msgs::msg::Vector3 out;
+  out.x = out.y = out.z = v;
+  return out;
+}
 tum_msgs::msg::TUMFloat64PerWheel per_wheel_filled(double v)
 {
   tum_msgs::msg::TUMFloat64PerWheel out;
@@ -41,12 +47,16 @@ ExternalInfluenceAggregatorNode::ExternalInfluenceAggregatorNode(
 {
   auto const wrench_topics = this->declare_parameter<std::vector<std::string>>(
     "wrench_source_topics", std::vector<std::string>{});
+  auto const wind_topics = this->declare_parameter<std::vector<std::string>>(
+    "wind_source_topics", std::vector<std::string>{});
   auto const grip_topics = this->declare_parameter<std::vector<std::string>>(
     "grip_source_topics", std::vector<std::string>{});
   auto const z_height_topics = this->declare_parameter<std::vector<std::string>>(
     "z_height_source_topics", std::vector<std::string>{});
   auto const wrench_op = parse_combine_op(
     this->declare_parameter<std::string>("wrench_combine_op", "add"), this->get_logger());
+  auto const wind_op = parse_combine_op(
+    this->declare_parameter<std::string>("wind_combine_op", "add"), this->get_logger());
   auto const grip_op = parse_combine_op(
     this->declare_parameter<std::string>("grip_combine_op", "multiply"), this->get_logger());
   auto const z_height_op = parse_combine_op(
@@ -63,6 +73,8 @@ ExternalInfluenceAggregatorNode::ExternalInfluenceAggregatorNode(
   // sources for the chosen op.
   using WrenchChannel =
     InfluenceChannel<geometry_msgs::msg::WrenchStamped, geometry_msgs::msg::Wrench>;
+  using Vector3Channel =
+    InfluenceChannel<geometry_msgs::msg::Vector3Stamped, geometry_msgs::msg::Vector3>;
   using PerWheelChannel =
     InfluenceChannel<tum_msgs::msg::TUMFloat64PerWheelStamped, tum_msgs::msg::TUMFloat64PerWheel>;
   auto const to_data = [](tum_msgs::msg::TUMFloat64PerWheelStamped const & m) { return m.data; };
@@ -71,6 +83,9 @@ ExternalInfluenceAggregatorNode::ExternalInfluenceAggregatorNode(
     this, qos, wrench_topics, wrench_op,
     wrench_filled(wrench_op == CombineOp::multiply ? 1.0 : 0.0),
     [](geometry_msgs::msg::WrenchStamped const & m) { return m.wrench; });
+  wind_channel_ = std::make_unique<Vector3Channel>(
+    this, qos, wind_topics, wind_op, vector3_filled(wind_op == CombineOp::multiply ? 1.0 : 0.0),
+    [](geometry_msgs::msg::Vector3Stamped const & m) { return m.vector; });
   grip_channel_ = std::make_unique<PerWheelChannel>(
     this, qos, grip_topics, grip_op, per_wheel_filled(grip_op == CombineOp::multiply ? 1.0 : 0.0),
     to_data);
@@ -90,6 +105,7 @@ void ExternalInfluenceAggregatorNode::publish()
   msg.header.stamp = this->get_clock()->now();
   msg.header.frame_id = frame_id_;
   msg.wrench = wrench_channel_->combined();
+  msg.wind_mps = wind_channel_->combined();
   msg.lambda_mue = grip_channel_->combined();
   msg.z_height_road_m = z_height_channel_->combined();
 

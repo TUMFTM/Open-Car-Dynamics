@@ -16,6 +16,7 @@ inline tam::ocd::types::ExternalInfluences external_influences_type_from_msg(
   types::ExternalInfluences type_;
   type_.external_force_N = tam::type_conversions::vector_3d_type_from_msg(msg.wrench.force);
   type_.external_torque_Nm = tam::type_conversions::vector_3d_type_from_msg(msg.wrench.torque);
+  type_.wind_mps = tam::type_conversions::vector_3d_type_from_msg(msg.wind_mps);
   type_.lambda_mue = tam::type_conversions::data_per_wheel_type_from_msg(msg.lambda_mue);
   type_.z_height_road_m = tam::type_conversions::data_per_wheel_type_from_msg(msg.z_height_road_m);
   return type_;

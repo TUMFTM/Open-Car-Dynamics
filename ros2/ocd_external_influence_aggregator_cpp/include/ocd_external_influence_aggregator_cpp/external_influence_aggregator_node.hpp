@@ -3,6 +3,8 @@
 #pragma once
 
 #include <functional>
+#include <geometry_msgs/msg/vector3.hpp>
+#include <geometry_msgs/msg/vector3_stamped.hpp>
 #include <geometry_msgs/msg/wrench.hpp>
 #include <geometry_msgs/msg/wrench_stamped.hpp>
 #include <memory>
@@ -43,6 +45,26 @@ inline geometry_msgs::msg::Wrench operator*(
   out.torque.x = a.torque.x * b.torque.x;
   out.torque.y = a.torque.y * b.torque.y;
   out.torque.z = a.torque.z * b.torque.z;
+  return out;
+}
+/// Component-wise operators on \c geometry_msgs/Vector3 so wind sources can be
+/// folded with the same generic reducer used for other vector channels.
+inline geometry_msgs::msg::Vector3 operator+(
+  geometry_msgs::msg::Vector3 const & a, geometry_msgs::msg::Vector3 const & b)
+{
+  geometry_msgs::msg::Vector3 out;
+  out.x = a.x + b.x;
+  out.y = a.y + b.y;
+  out.z = a.z + b.z;
+  return out;
+}
+inline geometry_msgs::msg::Vector3 operator*(
+  geometry_msgs::msg::Vector3 const & a, geometry_msgs::msg::Vector3 const & b)
+{
+  geometry_msgs::msg::Vector3 out;
+  out.x = a.x * b.x;
+  out.y = a.y * b.y;
+  out.z = a.z * b.z;
   return out;
 }
 /// Component-wise operators on \c tum_msgs/TUMFloat64PerWheel so the grip and
@@ -106,8 +128,8 @@ private:
   std::vector<typename rclcpp::Subscription<MsgT>::SharedPtr> subscriptions_;
 };
 /// Aggregates any number of external-influence sources into a single
-/// \c ocd_interfaces/ExternalInfluences message. Force/torque, grip and road
-/// height are configured as independent lists of source topics (see the ROS
+/// \c ocd_interfaces/ExternalInfluences message. Force/torque, wind, grip and
+/// road height are configured as independent lists of source topics (see the ROS
 /// parameters below); each list is folded with its own combine op and the
 /// result is republished on a fixed-rate timer. Adding a new influence source
 /// only requires adding its topic to the corresponding parameter list.
@@ -130,6 +152,8 @@ private:
 
   std::unique_ptr<InfluenceChannel<geometry_msgs::msg::WrenchStamped, geometry_msgs::msg::Wrench>>
     wrench_channel_;
+  std::unique_ptr<InfluenceChannel<geometry_msgs::msg::Vector3Stamped, geometry_msgs::msg::Vector3>>
+    wind_channel_;
   std::unique_ptr<
     InfluenceChannel<tum_msgs::msg::TUMFloat64PerWheelStamped, tum_msgs::msg::TUMFloat64PerWheel>>
     grip_channel_;
