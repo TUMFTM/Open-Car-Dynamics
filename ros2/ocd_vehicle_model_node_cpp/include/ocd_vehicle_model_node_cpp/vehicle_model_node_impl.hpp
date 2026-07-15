@@ -24,6 +24,9 @@ VehicleModelNode<VEHICLE_T, DT_COMM_HANDLER_T, SA_COMM_HANDLER_T>::VehicleModelN
 {
   high_frequency_logging_ =
     this->declare_parameter<bool>("enable_high_frequency_output", high_frequency_logging_);
+  // Publish rate of the output timer, independent from the simulation step callback. Ignored when
+  // enable_high_frequency_output is true (outputs are then published once per simulation step).
+  double output_rate_hz = this->declare_parameter<double>("output_rate_hz", 100.0);
 
   dt_comm_handler_ = std::make_shared<DT_COMM_HANDLER_T>(this);
   sa_comm_handler_ = std::make_shared<SA_COMM_HANDLER_T>(this);
@@ -57,8 +60,14 @@ VehicleModelNode<VEHICLE_T, DT_COMM_HANDLER_T, SA_COMM_HANDLER_T>::VehicleModelN
       this));
 
   if (!high_frequency_logging_) {
+    if (output_rate_hz <= 0.0) {
+      RCLCPP_ERROR(
+        this->get_logger(), "output_rate_hz must be > 0, got %f. Falling back to 100 Hz.",
+        output_rate_hz);
+      output_rate_hz = 100.0;
+    }
     output_timer_ = tam::create_timer(
-      this, std::chrono::milliseconds(10),
+      this, std::chrono::duration<double>(1.0 / output_rate_hz),
       std::bind(
         &VehicleModelNode<VEHICLE_T, DT_COMM_HANDLER_T, SA_COMM_HANDLER_T>::output_callback, this));
   }
