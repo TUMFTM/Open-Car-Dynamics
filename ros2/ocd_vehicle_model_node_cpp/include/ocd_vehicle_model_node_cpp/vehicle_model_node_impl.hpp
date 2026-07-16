@@ -1,5 +1,7 @@
 // Copyright 2026 Simon Sagmeister
 #pragma once
+#include <algorithm>
+#include <cmath>
 #include <memory>
 #include <string>
 #include <utility>
@@ -24,6 +26,17 @@ VehicleModelNode<VEHICLE_T, DT_COMM_HANDLER_T, SA_COMM_HANDLER_T>::VehicleModelN
 {
   high_frequency_logging_ =
     this->declare_parameter<bool>("enable_high_frequency_output", high_frequency_logging_);
+  double output_rate_hz = this->declare_parameter<double>("output_rate_hz", 100.0);
+  
+  enable_step_size_compensation_ = this->declare_parameter<bool>(
+    "time_skew.enable_step_size_compensation", enable_step_size_compensation_);
+  // Time skew monitoring / compensation tuning parameters.
+  time_skew_filter_alpha_ =
+    this->declare_parameter<double>("time_skew.filter_alpha", time_skew_filter_alpha_);
+  time_skew_threshold_ =
+    this->declare_parameter<double>("time_skew.warn_threshold", time_skew_threshold_);
+  step_size_compensation_max_deviation_ = this->declare_parameter<double>(
+    "time_skew.step_size_compensation_max_relative", step_size_compensation_max_deviation_);
 
   dt_comm_handler_ = std::make_shared<DT_COMM_HANDLER_T>(this);
   sa_comm_handler_ = std::make_shared<SA_COMM_HANDLER_T>(this);
@@ -57,8 +70,14 @@ VehicleModelNode<VEHICLE_T, DT_COMM_HANDLER_T, SA_COMM_HANDLER_T>::VehicleModelN
       this));
 
   if (!high_frequency_logging_) {
+    if (output_rate_hz <= 0.0) {
+      RCLCPP_ERROR(
+        this->get_logger(), "output_rate_hz must be > 0, got %f. Falling back to 100 Hz.",
+        output_rate_hz);
+      output_rate_hz = 100.0;
+    }
     output_timer_ = tam::create_timer(
-      this, std::chrono::milliseconds(10),
+      this, std::chrono::duration<double>(1.0 / output_rate_hz),
       std::bind(
         &VehicleModelNode<VEHICLE_T, DT_COMM_HANDLER_T, SA_COMM_HANDLER_T>::output_callback, this));
   }
@@ -100,20 +119,71 @@ template <
   interfaces::concepts::CommunicationHandler SA_COMM_HANDLER_T>
 void VehicleModelNode<VEHICLE_T, DT_COMM_HANDLER_T, SA_COMM_HANDLER_T>::model_update_callback()
 {
+  rclcpp::Time callback_time = this->get_clock()->now();
+  const std::chrono::microseconds nominal_step =
+    std::chrono::duration_cast<std::chrono::microseconds>(timer_period_s_);
+
+  std::chrono::microseconds callback_dt = nominal_step;
+  if (initial_cycle_) {
+    first_callback_time_ = callback_time;
+    last_callback_time_ = callback_time;
+  } else {
+    callback_dt = (callback_time - last_callback_time_).to_chrono<std::chrono::microseconds>();
+    last_callback_time_ = callback_time;
+  }
+
+  const std::chrono::microseconds elapsed_since_start =
+    (callback_time - first_callback_time_).to_chrono<std::chrono::microseconds>();
+  const std::chrono::microseconds accumulated_skew = elapsed_since_start - sim_time_since_start_;
+
+  // Choose the integration step size. If compensation is enabled, add the accumulated skew on top
+  // of the nominal step so the simulation catches up, clamped to a bounded deviation from nominal.
+  std::chrono::microseconds effective_step = nominal_step;
+  if (enable_step_size_compensation_) {
+    const std::chrono::microseconds max_deviation =
+      std::chrono::duration_cast<std::chrono::microseconds>(
+        nominal_step * step_size_compensation_max_deviation_);
+    effective_step = std::clamp(
+      nominal_step + accumulated_skew, nominal_step - max_deviation, nominal_step + max_deviation);
+    veh_model_->get_param_manager()->set_value(
+      "integration_step_size_s", std::chrono::duration<double>(effective_step).count());
+  }
+
+  sim_time_since_start_ += effective_step;
+
+  const double skew_rate =
+    static_cast<double>(callback_dt.count()) / static_cast<double>(nominal_step.count());
+  filtered_skew_rate_ += time_skew_filter_alpha_ * (skew_rate - filtered_skew_rate_);
+
+  // Get the chrono time to actually have an execution time measurement (not affected by sim time)
   auto t_start = std::chrono::high_resolution_clock::now().time_since_epoch();
+
   update_model_inputs();
 
   if (has_new_external_influence_) update_external_influences();
 
   veh_model_->step();
-  dt_comm_handler_->update_delay_timer(timer_period_s_);
-  sa_comm_handler_->update_delay_timer(timer_period_s_);
+  dt_comm_handler_->update_delay_timer(effective_step);
+  sa_comm_handler_->update_delay_timer(effective_step);
 
   auto t_stop = std::chrono::high_resolution_clock::now().time_since_epoch();
 
   logger_->log(
     "node/model_step_time_us",
     std::chrono::duration_cast<std::chrono::microseconds>(t_stop - t_start).count());
+  logger_->log("node/time_between_callbacks_us", callback_dt.count());
+  logger_->log("node/effective_step_size_us", effective_step.count());
+  logger_->log("node/accumulated_skew_us", accumulated_skew.count());
+  logger_->log("node/skew_rate", skew_rate);
+  logger_->log("node/skew_rate_filtered", filtered_skew_rate_);
+
+  if (std::abs(filtered_skew_rate_ - 1.0) > time_skew_threshold_) {
+    RCLCPP_WARN_THROTTLE(
+      this->get_logger(), *this->get_clock(), 5000,
+      "Filtered simulation time skew rate is %.2f%% off real-time (threshold %.2f%%). The "
+      "simulation is not keeping up with real-time.",
+      (filtered_skew_rate_ - 1.0) * 100.0, time_skew_threshold_ * 100.0);
+  }
 
   if (initial_cycle_) {
     initial_cycle_ = false;
