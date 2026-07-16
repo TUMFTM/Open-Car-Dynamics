@@ -22,23 +22,25 @@ types::AeroModelOutput DefaultAerodynamicsModel::evaluate(types::AeroModelInput 
   };
 
   types::AeroModelOutput out;
+  double const vx_rel_mps = u.vx_mps - u.wind_mps.x;
+  double const vy_rel_mps = u.vy_mps - u.wind_mps.y;
 
   // Lift cofficient multiplier interpolation
   double delta_c_l = tam::helpers::numerical::interp(
-    u.vx_mps, p_.c_l_velocity_scaling__vel_mps, p_.c_l_velocity_scaling__delta_c_l);
+    vx_rel_mps, p_.c_l_velocity_scaling__vel_mps, p_.c_l_velocity_scaling__delta_c_l);
   // Aero center translation interpolation
   double aero_center_translation_m = tam::helpers::numerical::interp(
     u.pitch_angle_rad, p_.pitch_aero_center_translation__pitch_rad,
     p_.pitch_aero_center_translation__aero_center_translation_m);
 
   out.force_cog_N.x =
-    -0.5 * p_.c_d * p_.air_density_kgpm3 * p_.A_m2 * std::pow(u.vx_mps, 2) * sign(u.vx_mps);
+    -0.5 * p_.c_d * p_.air_density_kgpm3 * p_.A_m2 * std::pow(vx_rel_mps, 2) * sign(vx_rel_mps);
   // To be precise the area of calculating the drag here is different for lateral movement
   // but this is neglected here
   out.force_cog_N.y =
-    -0.5 * p_.c_d * p_.air_density_kgpm3 * p_.A_m2 * std::pow(u.vy_mps, 2) * sign(u.vy_mps);
+    -0.5 * p_.c_d * p_.air_density_kgpm3 * p_.A_m2 * std::pow(vy_rel_mps, 2) * sign(vy_rel_mps);
   out.force_cog_N.z =
-    0.5 * (p_.c_l + delta_c_l) * p_.air_density_kgpm3 * p_.A_m2 * std::pow(u.vx_mps, 2);
+    0.5 * (p_.c_l + delta_c_l) * p_.air_density_kgpm3 * p_.A_m2 * std::pow(vx_rel_mps, 2);
 
   // Aero Balance
   out.torque_Nm.y = -out.force_cog_N.z * (p_.d_aero_center_cog_m + aero_center_translation_m);

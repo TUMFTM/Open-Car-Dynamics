@@ -9,6 +9,7 @@ struct ExternalInfluences
 {
   tam::types::common::Vector3D<double> external_force_N = {0, 0, 0};    // On the vehicle body
   tam::types::common::Vector3D<double> external_torque_Nm = {0, 0, 0};  // On the vehicle body
+  tam::types::common::Vector3D<double> wind_mps = {0, 0, 0};            // In vehicle frame
   tam::types::common::DataPerWheel<double> z_height_road_m = {0, 0, 0, 0};
   tam::types::common::DataPerWheel<double> lambda_mue = {1, 1, 1, 1};
 };
@@ -43,10 +44,11 @@ struct AeroModelOutput
 };
 struct AeroModelInput
 {
-  double vx_mps = 0.0;           // Velocity in x direction
-  double vy_mps = 0.0;           // Velocity in y direction
-  double pitch_angle_rad = 0.0;  // Pitch angle of the vehicle
-  double z_m = 0.0;              // Heave from neutral position
+  double vx_mps = 0.0;                                        // Velocity in x direction
+  double vy_mps = 0.0;                                        // Velocity in y direction
+  tam::types::common::Vector3D<double> wind_mps = {0, 0, 0};  // Air velocity in vehicle frame
+  double pitch_angle_rad = 0.0;                               // Pitch angle of the vehicle
+  double z_m = 0.0;                                           // Heave from neutral position
 };
 struct TireModelOutput
 {

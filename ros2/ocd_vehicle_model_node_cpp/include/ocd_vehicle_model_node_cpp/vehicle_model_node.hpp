@@ -9,6 +9,7 @@
 #include <rclcpp/rclcpp.hpp>
 
 #include "ocd_communication_handler_base_cpp/concept.hpp"
+#include "ocd_interfaces/msg/external_influences.hpp"
 #include "ocd_vehicle_model_base_cpp/concept.hpp"
 #include "param_management_cpp/base.hpp"
 #include "param_management_cpp/param_manager_composer.hpp"
@@ -16,7 +17,6 @@
 #include "param_management_ros2_integration_cpp/helper_functions.hpp"
 #include "tsl_logger_cpp/composer.hpp"
 #include "tsl_ros2_publisher_cpp/tsl_publisher.hpp"
-#include "tum_msgs/msg/tum_external_vehicle_influences.hpp"
 #include "tum_msgs/msg/tum_float32_stamped.hpp"
 #include "tum_msgs/msg/tum_float64_per_wheel_stamped.hpp"
 /// @brief VehicleModelNode class implementing a vehicle model node
@@ -76,7 +76,7 @@ private:
 
   // Subscriptions
   // clang-format off
-  rclcpp::Subscription<tum_msgs::msg::TUMExternalVehicleInfluences>::SharedPtr sub_external_influences_{}; // NOLINT
+  rclcpp::Subscription<ocd_interfaces::msg::ExternalInfluences>::SharedPtr sub_external_influences_{}; // NOLINT
   // clang-format on
 
   // Publishers
@@ -101,8 +101,7 @@ private:
 
   // Subscription callbacks
   /// @brief Callback for receiving external influences
-  void external_influences_callback(
-    const tum_msgs::msg::TUMExternalVehicleInfluences::SharedPtr msg);
+  void external_influences_callback(const ocd_interfaces::msg::ExternalInfluences::SharedPtr msg);
 
   // Update functions
   void update_model_inputs();

@@ -248,6 +248,7 @@ void VehicleDynamicsSingleTrackEqns<TireModelT, AeroModelT>::calculate_aerodynam
   types::AeroModelInput input;
   input.vx_mps = x_vec_[x::v_x_mps];
   input.vy_mps = x_vec_[x::v_y_mps];
+  input.wind_mps = external_influences_.wind_mps;
   input.pitch_angle_rad = 0.0;
   input.z_m = 0.0;
 

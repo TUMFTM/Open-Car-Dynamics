@@ -21,6 +21,8 @@ types::AeroModelOutput RideHeightAerodynamicsModel::evaluate(types::AeroModelInp
   };
 
   types::AeroModelOutput out;
+  double const vx_rel_mps = u.vx_mps - u.wind_mps.x;
+  double const vy_rel_mps = u.vy_mps - u.wind_mps.y;
 
   double l_r = p_.l - p_.l_f;
 
@@ -55,16 +57,16 @@ types::AeroModelOutput RideHeightAerodynamicsModel::evaluate(types::AeroModelInp
 
   // Output forces
   out.force_cog_N.x =
-    -0.5 * p_.c_d * p_.air_density_kgpm3 * p_.A_m2 * std::pow(u.vx_mps, 2) * sign(u.vx_mps);
+    -0.5 * p_.c_d * p_.air_density_kgpm3 * p_.A_m2 * std::pow(vx_rel_mps, 2) * sign(vx_rel_mps);
   out.force_cog_N.y =
-    -0.5 * p_.c_d * p_.air_density_kgpm3 * p_.A_m2 * std::pow(u.vy_mps, 2) * sign(u.vy_mps);
+    -0.5 * p_.c_d * p_.air_density_kgpm3 * p_.A_m2 * std::pow(vy_rel_mps, 2) * sign(vy_rel_mps);
   // Minus for Fz since lift coefficient are positive
   out.force_cog_N.z =
-    -0.5 * (c_l_front + c_l_rear) * p_.air_density_kgpm3 * p_.A_m2 * std::pow(u.vx_mps, 2);
+    -0.5 * (c_l_front + c_l_rear) * p_.air_density_kgpm3 * p_.A_m2 * std::pow(vx_rel_mps, 2);
 
   // Front and Rear Split
-  double f_l_front = -0.5 * c_l_front * p_.air_density_kgpm3 * p_.A_m2 * std::pow(u.vx_mps, 2);
-  double f_l_rear = -0.5 * c_l_rear * p_.air_density_kgpm3 * p_.A_m2 * std::pow(u.vx_mps, 2);
+  double f_l_front = -0.5 * c_l_front * p_.air_density_kgpm3 * p_.A_m2 * std::pow(vx_rel_mps, 2);
+  double f_l_rear = -0.5 * c_l_rear * p_.air_density_kgpm3 * p_.A_m2 * std::pow(vx_rel_mps, 2);
 
   // Output Torques
   out.torque_Nm.y = (f_l_rear * l_r) - (f_l_front * p_.l_f);
