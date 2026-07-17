@@ -58,20 +58,10 @@ private:
   bool high_frequency_logging_{false};
   std::unique_ptr<VEHICLE_T> veh_model_{};
 
-  // ============ Time skew monitoring and compensation ============
-  double time_skew_filter_alpha_{0.0005};
-  double time_skew_threshold_{0.05};
-  double filtered_skew_rate_{1.0};
-
-  // Time of the previous model update callback, measured on the node clock. Stays zero-initialized
-  // until the first callback runs, which is how the first callback is detected.
+  // Time skew monitoring and compensation
+  double filtered_double_step_ratio_{0.0};
+  std::int64_t double_step_count_{0};
   rclcpp::Time last_callback_time_{};
-
-  // When enabled, the integration step size handed to the model is adapted each cycle to drive the
-  // accumulated wall-vs-simulation time skew back to zero, clamped to at most this relative
-  // deviation from the configured (nominal) integration step size. Off by default.
-  double step_size_compensation_max_deviation_{0.15};
-  bool enable_step_size_compensation_{true};
 
   // Anchors for the accumulated skew: total integrated simulation time and the node-clock time of
   // the first callback (both seeded on the first callback, detected via initial_cycle_).

@@ -1,6 +1,7 @@
 // Copyright 2026 Simon Sagmeister
 #pragma once
 #include <algorithm>
+#include <chrono>
 #include <cmath>
 #include <memory>
 #include <string>
@@ -27,16 +28,6 @@ VehicleModelNode<VEHICLE_T, DT_COMM_HANDLER_T, SA_COMM_HANDLER_T>::VehicleModelN
   high_frequency_logging_ =
     this->declare_parameter<bool>("enable_high_frequency_output", high_frequency_logging_);
   double output_rate_hz = this->declare_parameter<double>("output_rate_hz", 100.0);
-  
-  enable_step_size_compensation_ = this->declare_parameter<bool>(
-    "time_skew.enable_step_size_compensation", enable_step_size_compensation_);
-  // Time skew monitoring / compensation tuning parameters.
-  time_skew_filter_alpha_ =
-    this->declare_parameter<double>("time_skew.filter_alpha", time_skew_filter_alpha_);
-  time_skew_threshold_ =
-    this->declare_parameter<double>("time_skew.warn_threshold", time_skew_threshold_);
-  step_size_compensation_max_deviation_ = this->declare_parameter<double>(
-    "time_skew.step_size_compensation_max_relative", step_size_compensation_max_deviation_);
 
   dt_comm_handler_ = std::make_shared<DT_COMM_HANDLER_T>(this);
   sa_comm_handler_ = std::make_shared<SA_COMM_HANDLER_T>(this);
@@ -132,28 +123,19 @@ void VehicleModelNode<VEHICLE_T, DT_COMM_HANDLER_T, SA_COMM_HANDLER_T>::model_up
     last_callback_time_ = callback_time;
   }
 
-  const std::chrono::microseconds elapsed_since_start =
-    (callback_time - first_callback_time_).to_chrono<std::chrono::microseconds>();
-  const std::chrono::microseconds accumulated_skew = elapsed_since_start - sim_time_since_start_;
+  const std::chrono::microseconds accumulated_skew =
+    (callback_time - first_callback_time_).to_chrono<std::chrono::microseconds>() -
+    sim_time_since_start_;
 
-  // Choose the integration step size. If compensation is enabled, add the accumulated skew on top
-  // of the nominal step so the simulation catches up, clamped to a bounded deviation from nominal.
-  std::chrono::microseconds effective_step = nominal_step;
-  if (enable_step_size_compensation_) {
-    const std::chrono::microseconds max_deviation =
-      std::chrono::duration_cast<std::chrono::microseconds>(
-        nominal_step * step_size_compensation_max_deviation_);
-    effective_step = std::clamp(
-      nominal_step + accumulated_skew, nominal_step - max_deviation, nominal_step + max_deviation);
-    veh_model_->get_param_manager()->set_value(
-      "integration_step_size_s", std::chrono::duration<double>(effective_step).count());
+  // Compensate the skew by stepping the model once, or twice to catch up to wall time
+  int num_steps = 1;
+  if (accumulated_skew > nominal_step) {
+    num_steps = 2;
+    ++double_step_count_;
   }
-
-  sim_time_since_start_ += effective_step;
-
-  const double skew_rate =
-    static_cast<double>(callback_dt.count()) / static_cast<double>(nominal_step.count());
-  filtered_skew_rate_ += time_skew_filter_alpha_ * (skew_rate - filtered_skew_rate_);
+  sim_time_since_start_ += num_steps * nominal_step;
+  // Filtered fraction of cycles that double-stepped, to detect a timer running too far off real-time.
+  filtered_double_step_ratio_ += 0.0005 * ((num_steps == 2 ? 1.0 : 0.0) - filtered_double_step_ratio_);
 
   // Get the chrono time to actually have an execution time measurement (not affected by sim time)
   auto t_start = std::chrono::high_resolution_clock::now().time_since_epoch();
@@ -162,9 +144,11 @@ void VehicleModelNode<VEHICLE_T, DT_COMM_HANDLER_T, SA_COMM_HANDLER_T>::model_up
 
   if (has_new_external_influence_) update_external_influences();
 
-  veh_model_->step();
-  dt_comm_handler_->update_delay_timer(effective_step);
-  sa_comm_handler_->update_delay_timer(effective_step);
+  for (int i = 0; i < num_steps; ++i) {
+    veh_model_->step();
+    dt_comm_handler_->update_delay_timer(nominal_step);
+    sa_comm_handler_->update_delay_timer(nominal_step);
+  }
 
   auto t_stop = std::chrono::high_resolution_clock::now().time_since_epoch();
 
@@ -172,34 +156,33 @@ void VehicleModelNode<VEHICLE_T, DT_COMM_HANDLER_T, SA_COMM_HANDLER_T>::model_up
     "node/model_step_time_us",
     std::chrono::duration_cast<std::chrono::microseconds>(t_stop - t_start).count());
   logger_->log("node/time_between_callbacks_us", callback_dt.count());
-  logger_->log("node/effective_step_size_us", effective_step.count());
   logger_->log("node/accumulated_skew_us", accumulated_skew.count());
-  logger_->log("node/skew_rate", skew_rate);
-  logger_->log("node/skew_rate_filtered", filtered_skew_rate_);
+  logger_->log("node/num_steps", num_steps);
+  logger_->log("node/double_step_count", double_step_count_);
+  logger_->log("node/filtered_double_step_ratio", filtered_double_step_ratio_);
 
-  if (std::abs(filtered_skew_rate_ - 1.0) > time_skew_threshold_) {
+  // Warn once per second if the skew exceeds 0.1 s despite the compensation.
+  if (std::chrono::abs(accumulated_skew) > std::chrono::milliseconds(100)) {
+    RCLCPP_WARN_THROTTLE(
+      this->get_logger(), *this->get_clock(), 1000,
+      "Simulation time skew is %ld ms (> 100 ms); step compensation cannot keep up.",
+      std::chrono::duration_cast<std::chrono::milliseconds>(accumulated_skew).count());
+  }
+  // Warn (throttled) if we are persistently double-stepping (timer running far below real-time).
+  if (filtered_double_step_ratio_ > 0.1) {
     RCLCPP_WARN_THROTTLE(
       this->get_logger(), *this->get_clock(), 5000,
-      "Filtered simulation time skew rate is %.2f%% off real-time (threshold %.2f%%). The "
-      "simulation is not keeping up with real-time.",
-      (filtered_skew_rate_ - 1.0) * 100.0, time_skew_threshold_ * 100.0);
-  }
-
-  if (initial_cycle_) {
-    initial_cycle_ = false;
-    return;
-  }
-
-  if ((t_stop - t_start) > timer_period_s_) {
-    RCLCPP_ERROR(
-      this->get_logger(),
-      "Model exceeded %ldus update time!\nPhysics no longer guaranteed to be correct!",
-      std::chrono::duration_cast<std::chrono::microseconds>(timer_period_s_).count());
+      "Double-stepping %.1f%% of cycles (> 10%%): the timer is running well below real-time.",
+      filtered_double_step_ratio_ * 100.0);
   }
 
   if (high_frequency_logging_) {
     output_callback();
   }
+
+  // Mark the first callback done so subsequent cycles measure real elapsed time against the anchor
+  // instead of re-seeding first_callback_time_/last_callback_time_ every cycle.
+  initial_cycle_ = false;
 }
 template <
   interfaces::concepts::VehicleModel VEHICLE_T,
