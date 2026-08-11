@@ -41,6 +41,7 @@ repository-code: "https://github.com/TUMFTM/open-car-dynamics"
 url: "https://github.com/TUMFTM/open-car-dynamics"
 version: "2.1.1"
 date-released: "2026-08-11"
+doi: "10.5281/zenodo.21893356"
 preferred-citation:
   type: conference-paper
   title: "Analyzing the Impact of Simulation Fidelity on the Evaluation of Autonomous Driving Motion Control"
