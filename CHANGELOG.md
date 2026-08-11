@@ -4,6 +4,16 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+
+## [2.1.1] - 2026-08-11
+### Added
+- Configurable output rate for `VehicleModelNode` via the new ROS 2 parameter `output_rate_hz` (default 100 Hz), replacing the previously hard-coded 10 ms output timer. Non-positive values are rejected with an error log and fall back to 100 Hz.
+- Time-skew monitoring and compensation in the model update callback: the node tracks the accumulated skew between its clock and the integrated simulation time, and performs a second integration step within a cycle to catch up whenever the skew exceeds one nominal step.
+- Additional logged diagnostic signals for the model update callback: `node/time_between_callbacks_us`, `node/accumulated_skew_us`, `node/num_steps`, `node/double_step_count`, and `node/filtered_double_step_ratio`.
+
+### Changed
+- The communication handler delay timers are now advanced with the nominal step size once per executed integration step, instead of once per callback.
+
 ## [2.1.0] - 2026-07-10
 ### Added
 - Support for supplying environmental wind conditions to the vehicle.

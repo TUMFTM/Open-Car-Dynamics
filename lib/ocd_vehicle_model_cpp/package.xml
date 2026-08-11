@@ -1,7 +1,7 @@
 <?xml version='1.0' encoding='utf-8'?>
 <package format="3">
   <name>ocd_vehicle_model_cpp</name>
-  <version>2.0.0</version>
+  <version>2.1.1</version>
   <description>A generic vehicle model implementation in C++ which can be composed from a
     drivetrain, steering actuator and a dynamics model</description>
   <maintainer email="simon.sagmeister@tum.de">Simon Sagmeister</maintainer>

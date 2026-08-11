@@ -1,0 +1,65 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it using the metadata from this file."
+title: "Open Car Dynamics"
+type: software
+abstract: >-
+  Open Car Dynamics provides a comprehensive, modular, and highly efficient
+  implementation of a vehicle's dynamic behaviour. Following the philosophy of modelling
+  vehicle behaviour in as much detail as necessary, but as simply as possible, the
+  library simplifies parametrisation and adaptation to custom requirements. It is written
+  in modern C++ for maximum performance and provides integrations for Python and ROS 2.
+  The vehicle dynamics have been validated against data recorded with the AV21 autonomous
+  racecar used in the Indy Autonomous Challenge.
+authors:
+  - family-names: "Sagmeister"
+    given-names: "Simon"
+    orcid: "https://orcid.org/0009-0002-9246-5456"
+    affiliation: "Technical University of Munich, Germany; School of Engineering & Design, Department of Mobility Systems Engineering, Institute of Automotive Technology"
+    email: "simon.sagmeister@tum.de"
+  - family-names: "Hoffmann"
+    given-names: "Simon"
+    affiliation: "Technical University of Munich, Germany; School of Engineering & Design, Department of Mobility Systems Engineering, Institute of Automotive Technology"
+  - family-names: "Jank"
+    given-names: "Georg"
+    orcid: "https://orcid.org/0009-0003-3557-635X"
+    affiliation: " Technical University of Munich, Germany; School of Engineering & Design, Department of Engineering Physics & Computation, Institute of Automatic Control"
+  - family-names: "Kounatidis"
+    given-names: "Panagiotis"
+license: Apache-2.0
+keywords:
+  - "vehicle dynamics"
+  - "vehicle dynamics model"
+  - "simulation"
+  - "real-time simulation"
+  - "tire model"
+  - "autonomous racing"
+  - "autonomous driving"
+  - "ROS 2"
+  - "C++"
+  - "Python"
+repository-code: "https://github.com/TUMFTM/open-car-dynamics"
+url: "https://github.com/TUMFTM/open-car-dynamics"
+version: "2.1.1"
+date-released: "2026-08-11"
+preferred-citation:
+  type: conference-paper
+  title: "Analyzing the Impact of Simulation Fidelity on the Evaluation of Autonomous Driving Motion Control"
+  authors:
+    - family-names: "Sagmeister"
+      given-names: "Simon"
+      orcid: "https://orcid.org/0009-0002-9246-5456"
+      affiliation: "Technical University of Munich, Germany; School of Engineering & Design, Department of Mobility Systems Engineering, Institute of Automotive Technology"
+    - family-names: "Kounatidis"
+      given-names: "Panagiotis"
+    - family-names: "Goblirsch"
+      given-names: "Sven"
+      affiliation: "Technical University of Munich, Germany; School of Engineering & Design, Department of Mobility Systems Engineering, Institute of Automotive Technology"
+    - family-names: "Lienkamp"
+      given-names: "Markus"
+      orcid: "https://orcid.org/0000-0002-9263-5323"
+      affiliation: "Technical University of Munich, Germany; School of Engineering & Design, Department of Mobility Systems Engineering, Institute of Automotive Technology"
+  collection-title: "2024 IEEE Intelligent Vehicles Symposium (IV)"
+  year: 2024
+  start: 230
+  end: 237
+  doi: "10.1109/IV55156.2024.10588858"

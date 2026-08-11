@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <package format="3">
   <name>ocd_external_influence_aggregator_cpp</name>
-  <version>1.0.0</version>
+  <version>2.1.1</version>
   <description>Parametric aggregator that folds any number of external-influence source topics into a single ocd_interfaces/ExternalInfluences message.</description>
   <maintainer email="simon.sagmeister@tum.de">Simon Sagmeister</maintainer>
   <license>Apache 2.0</license>
