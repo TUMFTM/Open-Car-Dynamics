@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
+## [2.1.0] - 2026-07-10
+### Added
+- Support for supplying environmental wind conditions to the vehicle.
+- Parametric external influence aggregator (`ocd_external_influence_aggregator_cpp`).
+- New message package `ocd_interfaces` for publishing and subscribing to the external influence interfaces.
+- `COLCON_IGNORE` for the plain CMake build directory, so the repository can be built inside a ROS 2 workspace.
+
+### Changed
+- The `ExternalInfluence` message now uses a wrench message directly, simplifying the combination of multiple influence sources.
+- Cleaned up the initialization of non-parameter variables.
+
+### Fixed
+- Logging and variable initialization for the drivetrains.
+- Submodule paths for the `tam__common` dependencies in the CMake build.
 
 ## [2.0.0] - 2026-02-23
 ### Added
