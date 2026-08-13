@@ -38,7 +38,6 @@ if(OCD_MATLAB_BUILD_MEX)
   matlab_add_mex(
     NAME ocd_matlab
     SRC src/gateway.cpp
-    DOCUMENTATION src/ocd_matlab.m
     LINK_TO ocd_matlab_adapter
     R2018a
   )

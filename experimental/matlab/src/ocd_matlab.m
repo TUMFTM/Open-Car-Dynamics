@@ -39,6 +39,7 @@
 %
 %   clear ocd_matlab
 %
-% This interface is experimental and has not yet been tested in MATLAB.
+% This interface remains experimental. It has been successfully built and run
+% on Ubuntu 22.04 with MATLAB R2026a; other configurations are unvalidated.
 % See experimental/matlab/README.md for examples and current limitations.
 
