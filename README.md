@@ -25,7 +25,9 @@ Furthermore, vehicle dynamics has been rigorously validated against data recorde
 [![Python](https://img.shields.io/badge/Python-3.12%20%7C%203.10-e3781f?logo=python&logoColor=white)](https://www.python.org/)
 [![ROS 2](https://img.shields.io/badge/ROS_2-Humble%20%7C%20Jazzy-e3781f.svg?logo=ros&logoColor=white)](https://docs.ros.org/en/humble/)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04%20%7C%2022.04-e3781f?logo=ubuntu&logoColor=white)
+<br>
 [![MATLAB experimental](https://img.shields.io/badge/MATLAB%20%7C%20Experimental-R2026a-e3781f?logo=mathworks&logoColor=white)](experimental/matlab/README.md)
+[![macOS](https://img.shields.io/badge/macOS-community%20tested-e3781f?logo=apple&logoColor=white)](https://github.com/TUMFTM/Open-Car-Dynamics/issues/3)
 </div>
 
 
