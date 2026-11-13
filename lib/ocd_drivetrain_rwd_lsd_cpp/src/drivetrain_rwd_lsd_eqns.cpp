@@ -16,9 +16,8 @@ void DrivetrainEquations_RWD_LSD::calc_LSD_torque_Nm()
   double sigma_diff = std::tanh(x_vec_[x::omega_diff_rear_radps]);
   double ratio =
     drivetrain_input_.transmission_output_torque_Nm > 0 ? p.LSD_lock_drive : p.LSD_lock_coast;
-  double lsd_torque_friction_Nm = ratio * drivetrain_input_.transmission_output_torque_Nm;
-  M_LSD_Nm = lsd_torque_friction_Nm > p.LSD_preload ? sigma_diff * lsd_torque_friction_Nm
-                                                    : sigma_diff * p.LSD_preload;
+  double lsd_torque_friction_Nm = ratio * std::abs(drivetrain_input_.transmission_output_torque_Nm);
+  M_LSD_Nm = sigma_diff * std::max(lsd_torque_friction_Nm, p.LSD_preload);
 }
 void DrivetrainEquations_RWD_LSD::evaluate()
 {

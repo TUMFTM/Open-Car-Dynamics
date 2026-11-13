@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Fixed
+- Bugfix: Previously the locking torque of limited slip differential was not applied during the coast phase. This is fixed with this version.
+
 ## [2.1.1] - 2026-08-11
 ### Added
 - Configurable output rate for `VehicleModelNode` via the new ROS 2 parameter `output_rate_hz` (default 100 Hz), replacing the previously hard-coded 10 ms output timer. Non-positive values are rejected with an error log and fall back to 100 Hz.
