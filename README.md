@@ -6,7 +6,7 @@
 <p>
 Open Car Dynamics provides a comprehensive, modular, and highly efficient implementation of a vehicle's dynamic behavior. 
 Following the philosophy of modeling vehicle behavior "in as much detail as necessary, but as simply as possible," the library drastically simplifies parametrization and adaptation to custom requirements. 
-Written in modern <b>C++</b> for maximum performance, the library offers seamless integrations for <b>Python</b> and <b>ROS 2</b>. 
+Written in modern <b>C++</b> for maximum performance, the library offers seamless integrations for <b>Python</b> and <b>ROS 2</b>. An <a href="experimental/matlab/README.md">experimental MATLAB binding</a>, tested on one Ubuntu and MATLAB configuration, is also available for community evaluation and feedback.
 Furthermore, vehicle dynamics has been rigorously validated against data recorded with the AV21 autonomous racecar used in the <a href="https://www.indyautonomouschallenge.com/">Indy Autonomous Challenge</a> to ensure simulation accuracy and reliability.
 </p>
 </div>
@@ -17,12 +17,17 @@ Furthermore, vehicle dynamics has been rigorously validated against data recorde
 [![CMake](https://img.shields.io/badge/CMake-3.18-1e6293?logo=cmake&logoColor=white)](https://cmake.org/)
 [![Docker](https://img.shields.io/badge/Container-docker-1e6293.svg?&logo=docker&logoColor=white)](https://www.docker.com/)
 [![Apache 2.0](https://img.shields.io/badge/License-Apache%202.0-1e6293.svg?&logo=apache&logoColor=white)](https://www.apache.org/licenses/LICENSE-2.0)
-[![DOI](https://img.shields.io/badge/DOI-10.1109%2FIV55156.2024.10588858-1e6293.svg?&logo=doi&logoColor=white)](https://doi.org/10.1109/IV55156.2024.10588858)
+<br>
+[![DOI](https://img.shields.io/badge/Paper-10.1109%2FIV55156.2024.10588858-1e6293.svg?&logo=doi&logoColor=white)](https://doi.org/10.1109/IV55156.2024.10588858)
+[![Zenodo](https://img.shields.io/badge/Software-10.5281%2Fzenodo.21893356-1e6293.svg?&logo=zenodo&logoColor=white)](https://doi.org/10.5281/zenodo.21893356)
 <br>
 
 [![Python](https://img.shields.io/badge/Python-3.12%20%7C%203.10-e3781f?logo=python&logoColor=white)](https://www.python.org/)
 [![ROS 2](https://img.shields.io/badge/ROS_2-Humble%20%7C%20Jazzy-e3781f.svg?logo=ros&logoColor=white)](https://docs.ros.org/en/humble/)
 ![Ubuntu](https://img.shields.io/badge/Ubuntu-24.04%20%7C%2022.04-e3781f?logo=ubuntu&logoColor=white)
+<br>
+[![MATLAB experimental](https://img.shields.io/badge/MATLAB%20%7C%20Experimental-R2026a-e3781f?logo=mathworks&logoColor=white)](experimental/matlab/README.md)
+[![macOS](https://img.shields.io/badge/macOS-community%20tested-e3781f?logo=apple&logoColor=white)](https://github.com/TUMFTM/Open-Car-Dynamics/issues/3)
 </div>
 
 
@@ -37,6 +42,7 @@ Furthermore, vehicle dynamics has been rigorously validated against data recorde
   - [2.4. Compile and Run the ROS 2 Nodes](#24-compile-and-run-the-ros-2-nodes)
   - [2.5. Compile the Python Bindings](#25-compile-the-python-bindings)
   - [2.6. Compile the Python Bindings without ROS 2 installed](#26-compile-the-python-bindings-without-ros-2-installed)
+  - [2.7. Experimental MATLAB Binding](#27-experimental-matlab-binding)
 - [3. Parameters](#3-parameters)
 - [4. Contributing](#4-contributing)
 - [5. Related Projects](#5-related-projects)
@@ -75,7 +81,7 @@ time below 10 µs on our benchmark system (AMD Ryzen 9 7950X).
 
 ## 2. Compiling and Running the Model
 
-The model and its different bindings (ROS 2, Python) can be compiled in multiple ways from source.
+The model and its different bindings (ROS 2, Python, and experimental MATLAB) can be compiled in multiple ways from source.
 First, ensure you meet the prerequisites in section 2.1.
 
 Afterwards, refer to the respective subsection depending on how and what you want to compile.
@@ -88,6 +94,7 @@ Before building, ensure you have the following installed:
 - **Build Tools:** CMake (>= 3.18), Make/Ninja
 - **Libraries:** Eigen3, Boost
 - *(Optional)* **ROS 2:** Humble or Jazzy (for ROS 2 nodes and Python bindings)
+- *(Optional)* **MATLAB:** For the experimental MEX binding; tested with MATLAB R2026a on Ubuntu 22.04
 - *(Optional)* **Docker:** If building Python bindings without a local ROS 2 installation
 
 ### 2.2. Clone Repository
@@ -217,6 +224,13 @@ Be sure to create a new shell after modifying your `.bashrc` file.
 
 After sourcing the install folder, the different vehicle models can be created using a 
 `VehicleFactory`. For a small example on how to use the models from Python, please refer to [our Python usage example](python3/ocd_vehicle_models_py/example/example.py)
+
+
+### 2.7. Experimental MATLAB Binding
+
+An intentionally small MATLAB MEX binding is available under [experimental/matlab](experimental/matlab/README.md). Its runtime factory covers all 48 drivetrain, steering, vehicle-dynamics, tire, and aerodynamics combinations exposed by the Python factory. It uses MATLAB-native values and simplified parameter commands instead of binding C++ manager or logger objects.
+
+The MATLAB binding remains experimental and is not part of the supported API. It has been successfully built and run on Ubuntu 22.04 with MATLAB R2026a; other operating systems and MATLAB releases have not been validated. Community build reports and feedback are welcome; see its README for the exact scope, build instructions, known limitations, and a minimal example.
 
 
 ## 3. Parameters
