@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [Unreleased]
+### Fixed
+- `LSD_lock_coast` of the `RWD_LSD` drivetrain had no effect: in coast (negative transmission torque) the ramp locking torque was computed with the signed input torque, so it was always negative and the LSD fell back to the preload. The locking torque is now computed from the magnitude of the input torque. Behavior in drive, with the default parameters, and with `LSD_lock_coast = 0` is unchanged.
+
 ## [2.1.1] - 2026-08-11
 ### Added
 - Configurable output rate for `VehicleModelNode` via the new ROS 2 parameter `output_rate_hz` (default 100 Hz), replacing the previously hard-coded 10 ms output timer. Non-positive values are rejected with an error log and fall back to 100 Hz.
