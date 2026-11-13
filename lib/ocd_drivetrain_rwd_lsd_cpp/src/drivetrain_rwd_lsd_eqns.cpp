@@ -1,10 +1,6 @@
 // Copyright 2026 Simon Sagmeister
 
 #include "ocd_drivetrain_rwd_lsd_cpp/drivetrain_rwd_lsd_eqns.hpp"
-
-#include <cmath>
-
-#include <algorithm>
 namespace tam::ocd::drivetrain
 {
 void DrivetrainEquations_RWD_LSD::calc_I_wheel_low_speed_kgm2()
@@ -17,14 +13,11 @@ void DrivetrainEquations_RWD_LSD::calc_I_wheel_low_speed_kgm2()
 void DrivetrainEquations_RWD_LSD::calc_LSD_torque_Nm()
 {
   // J. Looman, Zahnradgetriebe, p. 409
-  // The ramp (clamping) torque of a torque-sensing LSD scales with the magnitude of the input
-  // torque in both drive and coast. Its direction always opposes the relative rotation of the
-  // side shafts, which is captured by sigma_diff.
-  const double input_torque_Nm = drivetrain_input_.transmission_output_torque_Nm;
-  const double ratio = input_torque_Nm > 0 ? p.LSD_lock_drive : p.LSD_lock_coast;
-  const double ramp_locking_torque_Nm = ratio * std::abs(input_torque_Nm);
-  const double sigma_diff = std::tanh(x_vec_[x::omega_diff_rear_radps]);
-  M_LSD_Nm = sigma_diff * std::max(ramp_locking_torque_Nm, p.LSD_preload);
+  double sigma_diff = std::tanh(x_vec_[x::omega_diff_rear_radps]);
+  double ratio =
+    drivetrain_input_.transmission_output_torque_Nm > 0 ? p.LSD_lock_drive : p.LSD_lock_coast;
+  double lsd_torque_friction_Nm = ratio * std::abs(drivetrain_input_.transmission_output_torque_Nm);
+  M_LSD_Nm = sigma_diff * std::max(lsd_torque_friction_Nm, p.LSD_preload);
 }
 void DrivetrainEquations_RWD_LSD::evaluate()
 {
